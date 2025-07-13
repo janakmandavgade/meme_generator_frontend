@@ -7,12 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+
+// import { redirect } from "next/navigation";
+// import { AuthError } from "next-auth";
+// import { error } from "console";
+// import { GoogleLoginButton } from "@/components/login_with_google_button";
 import { signIn } from "@/app/auth";
-import { redirect } from "next/navigation";
-import { AuthError } from "next-auth";
-import { error } from "console";
 // import { useState } from "react"
 // import { signIn } from "next-auth/react"
 
@@ -20,6 +22,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -30,45 +33,8 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form
-            // action={async (formData) => {
-            //   "use server";
-            //   await signIn("credentials", { ...formData,
-            //     redirectTo: "/welcome",
-            //   });
-            // }}>
+          {/* <form
             action={async (formData) => {
-                                          "use server";
-
-                                          // // const { email, password } = Object.fromEntries(formData.entries()) as {
-                                          // //   email: string;
-                                          // //   password: string;
-                                          // // };
-
-                                          // //  const result = await signIn("credentials", {
-                                          // //   email: email,
-                                          // //   password: password,
-                                          // //   redirect: false,
-                                          // //   redirectTo: "/welcome",
-                                          // // });
-                                          //   const { email, password } = Object.fromEntries(formData.entries()) as {
-                                          //     email: string;
-                                          //     password: string;
-                                          //   };
-
-                                          //   const result = await signIn("credentials", {
-                                          //     email: email,
-                                          //     password: password,
-                                          //     redirect: false, // Important: Don't redirect automatically
-                                          //   });
-
-                                          //   // If successful, redirect manually
-                                          //   if (result?.error) {
-                                          //     redirect("/login?error=invalid-credentials");
-                                          //   } else {
-                                          //     redirect("/welcome");
-                                          //   }
-                                          // } 
 
                                           "use server";
   
@@ -115,14 +81,6 @@ export function LoginForm({
                 />
               </div>
               <div className="grid gap-3">
-                {/* <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                    Forgot your password?
-                  </a>
-                </div> */}
                 <Input
                   id="password"
                   name="password"
@@ -135,27 +93,29 @@ export function LoginForm({
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={async () => {
-                    "use server";
-                    await signIn("google", {
-                      redirect: true,
-                      redirectTo: "/welcome",
-                    });
-                  }}>
-                  Login with Google
-                </Button>
+                </div>
               </div>
-            </div>
-            <div className="mt-4 text-center text-sm">
+            </form> */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={async () => {
+                "use server";
+                await signIn("google", {
+                  redirect: true,
+                  redirectTo: "/welcome",
+                });
+              }}>
+              Login with Google
+            </Button>
+            {/* <GoogleLoginButton /> */}
+            {/* <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
               <a href="/signup" className="underline underline-offset-4">
                 Sign up
               </a>
-            </div>
-          </form>
+            </div> */}
+          
         </CardContent>
       </Card>
     </div>

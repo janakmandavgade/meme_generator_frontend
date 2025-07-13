@@ -122,7 +122,23 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    Google,
+    Google({
+      clientId: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID,
+      clientSecret: process.env.NEXT_PUBLIC_AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          scope: [
+            "openid",
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/youtube.upload"
+          ].join(" "),
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+    }),
     Credentials({
       credentials: {
         email: {},
@@ -170,16 +186,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account  }) {
+      console.log("Inside jwt callback, token: ",token);
+      console.log("Inside jwt callback, user: ",user);
+      console.log("Inside jwt callback, account: ",account);
       if (user) {
         token.uid = user.id;
         token.email = user.email;
       }
+      if (account) {
+        token.accessToken  = account?.access_token
+        token.refreshToken = account?.refresh_token
+      }
       return token;
     },
     async session({ session, token }) {
+
       session.user.id = token.uid as string;
       session.user.email = token.email as string;
+      // session.accessToken = token.accessToken as string;
+      // session.refreshToken = token.refreshToken as string;
+      ;(session as any).tokens = {
+      accessToken:  token.accessToken  as string,
+      refreshToken: token.refreshToken as string,
+      }
+      console.log("Inside session", session);
       return session;
     },
   },
@@ -193,6 +224,7 @@ export const checkUserCredentials = async (
   password: string
 ) => {
   try {
+    console.log("Checking user credentials for email in auth.ts:", email);
     const userCredential = await signInWithEmailAndPassword(firebase_auth, email, password);
     const user = userCredential.user;
     return user;

@@ -17,6 +17,9 @@ export async function signupAction(formData: FormData) {
         if(error.code === 'auth/email-already-in-use') {
             await redirect("/login?error=email-already-in-use");
         }
+        if(error.code === 'auth/weak-password') {
+            await redirect("/signup?error=weak-password");
+        }
         console.error("Signup failed:", error.message);
         throw new Error("Signup failed: " + error.message);
     }
